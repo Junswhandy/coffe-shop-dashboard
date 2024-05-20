@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>COFFEE SHOP SALES | DASHBOARD</title>
+    <!-- Verdana Font -->
+    <link href="https://fonts.cdnfonts.com/css/verdana" rel="stylesheet" />
+
+    <!-- Material Icons -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+    <!-- css files -->
+    <link rel="stylesheet" href="../css/index.css" />
+
+    <!-- logo -->
+    <link rel="icon" href="../assets/img/coffee-shop-logo.png" />
+  </head>
+  <body>
+    <div class="grid-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="menu-icon" onclick="openSidebar()">
+          <span class="material-icons-outlined">menu</span>
+        </div>
+        <div class="header-left"></div>
+        <div class="header-right">
+          <!-- <span class="material-icons-outlined">notifications</span>
+          <span class="material-icons-outlined">email</span>
+          <span class="material-icons-outlined">account_circle</span> -->
+          <div id="current-time"></div>
+        </div>
+      </header>
+      <!-- End Header -->
+
+      <!-- Sidebar -->
+      <aside id="sidebar">
+        <div class="sidebar-title">
+          <div class="sidebar-brand" style="color: #fff">COFFEE SHOP SALES</div>
+          <span class="material-icons-outlined" onclick="closeSidebar()"
+            >close</span
+          >
+        </div>
+
+        <ul class="sidebar-list">
+          <li class="sidebar-list-item">
+            <a href="#" target="_blank">
+              <span class="material-icons-outlined">dashboard</span> Dashboard
+            </a>
+          </li>
+        </ul>
+      </aside>
+      <!-- End Sidebar -->
+      <!-- main dashboard section -->
+      <main class="main-container">
+        <div class="main-cards">
+          <div class="card">
+            <div class="card-inner">
+              <h3>PRODUCTS</h3>
+              <span class="material-icons-outlined">inventory_2</span>
+            </div>
+            <h1>249</h1>
+          </div>
+
+          <div class="card">
+            <div class="card-inner">
+              <h3>CATEGORIES</h3>
+              <span class="material-icons-outlined">category</span>
+            </div>
+            <h1>25</h1>
+          </div>
+
+          <div class="card">
+            <div class="card-inner">
+              <h3>CUSTOMERS</h3>
+              <span class="material-icons-outlined">groups</span>
+            </div>
+            <h1>1500</h1>
+          </div>
+
+          <div class="card">
+            <div class="card-inner">
+              <h3>ALERTS</h3>
+              <span class="material-icons-outlined"
+                >notification_important</span
+              >
+            </div>
+            <h1>56</h1>
+          </div>
+        </div>
+
+        <div class="charts">
+          <!-- Chart di atas -->
+          <div class="top-charts">
+            <div class="charts-card">
+              <h2 class="chart-title">Tabel Chart</h2>
+              <div id="bar-chart"></div>
+            </div>
+
+            <div class="charts-card">
+              <h2 class="chart-title">Line Chart</h2>
+              <div id="line-chart"></div>
+            </div>
+          </div>
+
+          <!-- Chart di bawah -->
+          <div class="bottom-charts">
+            <div class="charts-card-bawah">
+              <h2 class="chart-title">Bar Chart1</h2>
+              <div id="bar-chart2"></div>
+            </div>
+
+            <div class="charts-card-bawah">
+              <h2 class="chart-title">Bar Chart</h2>
+              <div id="bar-chart3"></div>
+            </div>
+
+            <div class="charts-card-bawah">
+              <h2 class="chart-title">Bar Chart</h2>
+              <div id="bar-chart4"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <!-- End Main -->
+    </div>
+
+    <!-- Scripts -->
+    <!-- ApexCharts
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.5/apexcharts.min.js"></script> -->
+    <script src="../js/index.js"></script>
+  </body>
+</html>

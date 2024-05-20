@@ -13,11 +13,16 @@
       href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
     <!-- css files -->
     <link rel="stylesheet" href="../css/index.css" />
 
     <!-- logo -->
     <link rel="icon" href="../assets/img/coffee-shop-logo.png" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <div class="grid-container">
@@ -54,36 +59,39 @@
         </ul>
       </aside>
       <!-- End Sidebar -->
+
       <!-- main dashboard section -->
       <main class="main-container">
         <div class="main-cards">
           <div class="card">
             <div class="card-inner">
-              <h3>PRODUCTS</h3>
-              <span class="material-icons-outlined">inventory_2</span>
+              <h3>Transaction Amount</h3>
+              <span class="material-symbols-outlined"> sell </span>
             </div>
             <h1>249</h1>
           </div>
 
           <div class="card">
             <div class="card-inner">
-              <h3>CATEGORIES</h3>
-              <span class="material-icons-outlined">category</span>
+              <h3>Total Transaction</h3>
+              <span class="material-symbols-outlined">
+                shopping_cart_checkout
+              </span>
             </div>
             <h1>25</h1>
           </div>
 
           <div class="card">
             <div class="card-inner">
-              <h3>CUSTOMERS</h3>
-              <span class="material-icons-outlined">groups</span>
+              <h3>Total Revenue</h3>
+              <span class="material-symbols-outlined"> paid </span>
             </div>
-            <h1>1500</h1>
+            <h1 id="totalRevenue"></h1>
           </div>
 
           <div class="card">
             <div class="card-inner">
-              <h3>ALERTS</h3>
+              <h3>Masih Bingung</h3>
               <span class="material-icons-outlined"
                 >notification_important</span
               >
@@ -97,30 +105,36 @@
           <div class="top-charts">
             <div class="charts-card">
               <h2 class="chart-title">Tabel Chart</h2>
-              <div id="bar-chart"></div>
+              <div id="barchart"></div>
             </div>
 
             <div class="charts-card">
               <h2 class="chart-title">Line Chart</h2>
-              <div id="line-chart"></div>
+              <div id="line-chart">
+                <canvas id="timeChart" height="300"></canvas>
+              </div>
             </div>
           </div>
 
           <!-- Chart di bawah -->
           <div class="bottom-charts">
             <div class="charts-card-bawah">
-              <h2 class="chart-title">Bar Chart1</h2>
-              <div id="bar-chart2"></div>
+              <h2 class="chart-title">SALES BY STORE</h2>
+              <div id="bar-chart2"><canvas id="myChart"></canvas></div>
             </div>
 
             <div class="charts-card-bawah">
-              <h2 class="chart-title">Bar Chart</h2>
-              <div id="bar-chart3"></div>
+              <h2 class="chart-title">SALES BY MONTH</h2>
+              <div id="bar-chart3">
+                <canvas id="monthChart" height="300"></canvas>
+              </div>
             </div>
 
             <div class="charts-card-bawah">
-              <h2 class="chart-title">Bar Chart</h2>
-              <div id="bar-chart4"></div>
+              <h2 class="chart-title">SALES BY DAY</h2>
+              <div id="bar-chart4">
+                <canvas id="weekdayChart" height="300"></canvas>
+              </div>
             </div>
           </div>
         </div>
@@ -128,9 +142,9 @@
       <!-- End Main -->
     </div>
 
-    <!-- Scripts -->
-    <!-- ApexCharts
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.5/apexcharts.min.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.5/apexcharts.min.js"></script> -->
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/card.js"></script>
     <script src="../js/index.js"></script>
   </body>
 </html>
