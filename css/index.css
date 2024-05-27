@@ -187,13 +187,113 @@ body {
   justify-content: center;
 }
 
+/* tabel chart style */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+table,
+th,
+td {
+  border: 1px solid black;
+}
+th,
+td {
+  padding: 8px;
+  text-align: left;
+}
+tbody {
+  display: block;
+  max-height: 300px; /* Set a max height for the table body */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+thead,
+tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
 /* mengatur ketinggian chart */
 #bar-chart,
 #area-chart,
 #bar-chart2,
 #area-chart2,
 #area-chart3 {
-  height: 300px; /* Sesuaikan tinggi sesuai kebutuhan */
+  height: 300px;
+}
+
+/* filter style  */
+/* Mengatur form agar elemen-elemennya tersusun secara horizontal */
+#filterForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px; /* Memberikan jarak antar elemen */
+  background-color: #f9f9f9; /* Latar belakang form */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Menambahkan bayangan */
+}
+
+/* Mengatur input dan select agar memiliki ukuran tetap dan desain yang menarik */
+#filterForm div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#filterForm div select,
+#filterForm div input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 200px;
+  transition: border-color 0.3s;
+}
+
+#filterForm div select:focus,
+#filterForm div input:focus {
+  border-color: #4caf50; /* Warna border saat fokus */
+}
+
+#filterForm button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4caf50;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#filterForm button:hover {
+  background-color: #45a049;
+}
+
+#filterForm button:active {
+  background-color: #3e8e41;
+}
+
+/* Mengatur button agar tidak terlalu besar */
+#filterBtn,
+#clearBtn {
+  flex: 0 1 auto;
+}
+
+@media (max-width: 768px) {
+  /* Mengatur ulang tata letak untuk layar kecil agar menjadi vertikal */
+  #filterForm {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #filterForm div select,
+  #filterForm div input,
+  #filterForm button {
+    width: 100%; /* Mengatur elemen agar mengambil lebar penuh pada layar kecil */
+  }
 }
 
 /* ---------- MEDIA QUERIES ---------- */

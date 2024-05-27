@@ -4,29 +4,101 @@ let monthChart = null;
 let myChart = null;
 let weekdayChart = null;
 let timeChart = null;
+let totalRevenueCard = null;
+let totalStoresCard = null;
+let totalTransactionsCard = null;
+let totalTransactionQuantityCard = null;
 
-// fungsi filter berdasarkan tanggal
-function logSubmit(event) {
-  event.preventDefault();
-  const formData = new FormData(event.target);
-  console.log(formData.get("date"));
-  const latest = new Date("2023-06-31");
-  const current = new Date(formData.get("date"));
+// Fungsi filter data
+function filterData() {
+  const dateInput = document.getElementById("date").value;
+  const storeLocationInput = document.getElementById("storeLocation").value;
+  const monthNameInput = document.getElementById("monthName").value;
+  const weekdayNameInput = document.getElementById("weekdayName").value;
+  const productTypeInput = document.getElementById("productType").value;
 
-  if (current.getTime() > latest.getTime()) {
-    alert("Tanggal Tidak Valid");
-    return;
+  // Mengecek apakah semua filter kosong
+  if (
+    !dateInput &&
+    !storeLocationInput &&
+    !monthNameInput &&
+    !weekdayNameInput &&
+    !productTypeInput
+  ) {
+    alert("Please select at least one filter before applying.");
+    return; // Menghentikan eksekusi fungsi jika tidak ada filter yang dipilih
   }
-  const newData = dataJson.filter(
-    (x) => x["transaction_date"] == formData.get("date")
-  );
-  tampilStore(newData);
-  tampilBulan(newData);
-  tampilDay(newData);
-  tampilTimeChart(newData);
+
+  let filteredData = dataJson;
+
+  if (dateInput) {
+    const selectedDate = new Date(dateInput);
+    const latest = new Date("2023-06-31");
+
+    if (selectedDate.getTime() > latest.getTime()) {
+      alert("Tanggal Tidak Valid");
+      return;
+    }
+
+    filteredData = filteredData.filter(
+      (x) => x["transaction_date"] === dateInput
+    );
+  }
+
+  if (storeLocationInput) {
+    filteredData = filteredData.filter(
+      (x) => x["store_location"] === storeLocationInput
+    );
+  }
+
+  if (monthNameInput) {
+    filteredData = filteredData.filter(
+      (x) => x["month_name"] === monthNameInput
+    );
+  }
+
+  if (weekdayNameInput) {
+    filteredData = filteredData.filter(
+      (x) => x["weekday_name"] === weekdayNameInput
+    );
+  }
+
+  if (productTypeInput) {
+    filteredData = filteredData.filter(
+      (x) => x["product_type"] === productTypeInput
+    );
+  }
+
+  console.log("Filtered data:", filteredData); // Log data yang telah difilter
+
+  tampilStore(filteredData);
+  tampilBulan(filteredData);
+  tampilDay(filteredData);
+  tampilTimeChart(filteredData);
+  updateTotalRevenue(filteredData);
+  updateTotalStores(filteredData);
+  updateTotalTransactionQuantity(filteredData);
+  updateTotalTransactions(filteredData);
+  productTypeTable(filteredData);
 }
-const form = document.getElementById("form");
-form.addEventListener("submit", logSubmit);
+
+// Fungsi untuk menghapus filter dan menampilkan data asli
+function clearFilters() {
+  document.getElementById("filterForm").reset();
+  tampilStore(dataJson);
+  tampilBulan(dataJson);
+  tampilDay(dataJson);
+  tampilTimeChart(dataJson);
+  updateTotalRevenue(dataJson);
+  updateTotalStores(dataJson);
+  updateTotalTransactionQuantity(dataJson);
+  updateTotalTransactions(dataJson);
+  productTypeTable(dataJson);
+}
+
+// Menambahkan event listener ke tombol filter
+document.getElementById("filterBtn").addEventListener("click", filterData);
+document.getElementById("clearBtn").addEventListener("click", clearFilters);
 
 const optionsChart = {
   responsive: true, // Membuat grafik responsif
@@ -99,7 +171,6 @@ function tampilStore(data) {
   myChart.config.data.datasets[0].data = Object.values(salesByStore);
   myChart.update();
 }
-
 function tampilBulan(data) {
   if (monthChart == null) {
     const config = {
@@ -293,6 +364,117 @@ function tampilTimeChart(data) {
   timeChart.config.data.datasets[0].data = dataa; // Memperbarui data
   timeChart.update();
 }
+// Fungsi untuk memproses data dan mengisi tabel
+// Fungsi untuk memproses data dan mengisi tabel
+function productTypeTable(data) {
+  const tableBody = document.querySelector("#transactionsTable tbody");
+  const aggregatedData = {};
+
+  // Menghitung total transaction_qty per product_type
+  data.forEach((item) => {
+    const productType = item.product_type;
+    const transactionQty = parseInt(item.transaction_qty);
+
+    if (aggregatedData[productType]) {
+      aggregatedData[productType] += transactionQty;
+    } else {
+      aggregatedData[productType] = transactionQty;
+    }
+  });
+
+  // Convert aggregatedData to an array
+  const aggregatedArray = Object.entries(aggregatedData).map(
+    ([product_type, transaction_qty]) => ({ product_type, transaction_qty })
+  );
+
+  // Mengurutkan array berdasarkan transaction_qty dari yang terbesar ke yang terkecil
+  aggregatedArray.sort((a, b) => b.transaction_qty - a.transaction_qty);
+
+  // Clear existing rows
+  tableBody.innerHTML = "";
+
+  // Menambahkan baris ke tabel (menampilkan hanya 7 data pertama)
+  aggregatedArray.slice(0, 7).forEach((item) => {
+    const row = document.createElement("tr");
+
+    const productTypeCell = document.createElement("td");
+    productTypeCell.textContent = item.product_type;
+    row.appendChild(productTypeCell);
+
+    const transactionQtyCell = document.createElement("td");
+    transactionQtyCell.textContent = item.transaction_qty;
+    row.appendChild(transactionQtyCell);
+
+    tableBody.appendChild(row);
+  });
+
+  // Menambahkan baris sisa data ke tabel untuk scrolling
+  if (aggregatedArray.length > 7) {
+    aggregatedArray.slice(7).forEach((item) => {
+      const row = document.createElement("tr");
+
+      const productTypeCell = document.createElement("td");
+      productTypeCell.textContent = item.product_type;
+      row.appendChild(productTypeCell);
+
+      const transactionQtyCell = document.createElement("td");
+      transactionQtyCell.textContent = item.transaction_qty;
+      row.appendChild(transactionQtyCell);
+
+      tableBody.appendChild(row);
+    });
+  }
+}
+
+// card section
+function updateTotalRevenue(data) {
+  totalRevenueCard = document.getElementById("totalRevenue");
+
+  let totalRevenue = 0;
+  data.forEach((item) => {
+    totalRevenue += parseFloat(item.revenue);
+  });
+  totalRevenue = totalRevenue.toFixed(2); // Mengambil dua angka di belakang koma
+
+  totalRevenueCard.innerText = "$" + totalRevenue; // Menampilkan total pendapatan di dalam card
+  console.log("Total revenue:", totalRevenue);
+}
+
+function updateTotalStores(data) {
+  totalStoresCard = document.getElementById("totalStore");
+
+  let stores = new Set();
+  data.forEach((item) => {
+    stores.add(item.store_location);
+  });
+  const totalStores = stores.size;
+
+  totalStoresCard.innerText = totalStores; // Menampilkan jumlah store di dalam card
+  console.log("Total stores:", totalStores);
+}
+
+function updateTotalTransactions(data) {
+  totalTransactionsCard = document.getElementById("totalTransactions");
+
+  const totalTransactions = data.length;
+
+  totalTransactionsCard.innerText = totalTransactions; // Menampilkan jumlah transaksi di dalam card
+  console.log("Total transactions:", totalTransactions);
+}
+
+function updateTotalTransactionQuantity(data) {
+  totalTransactionQuantityCard = document.getElementById(
+    "totalTransactionQuantity"
+  );
+
+  let totalTransactionQuantity = 0;
+  data.forEach((item) => {
+    totalTransactionQuantity += parseInt(item.transaction_qty);
+  });
+
+  totalTransactionQuantityCard.innerText = totalTransactionQuantity; // Menampilkan jumlah total transaction_qty di dalam card
+  console.log("Total transaction quantity:", totalTransactionQuantity);
+}
 
 // fungsi memanggil dan menampilkan data
 document.addEventListener("DOMContentLoaded", async function () {
@@ -302,4 +484,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   tampilBulan(dataJson);
   tampilDay(dataJson);
   tampilTimeChart(dataJson);
+  updateTotalRevenue(dataJson);
+  updateTotalStores(dataJson);
+  updateTotalTransactions(dataJson);
+  updateTotalTransactionQuantity(dataJson);
+  productTypeTable(dataJson);
 });
