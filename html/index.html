@@ -22,7 +22,6 @@
 
     <!-- logo -->
     <link rel="icon" href="../assets/img/coffee-shop-logo.png" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <div class="grid-container">
@@ -33,9 +32,6 @@
         </div>
         <div class="header-left"></div>
         <div class="header-right">
-          <!-- <span class="material-icons-outlined">notifications</span>
-          <span class="material-icons-outlined">email</span>
-          <span class="material-icons-outlined">account_circle</span> -->
           <div id="current-time"></div>
         </div>
       </header>
@@ -50,25 +46,14 @@
           >
         </div>
 
-        <ul class="sidebar-list">
-          <li class="sidebar-list-item">
-            <a href="#" target="_blank">
-              <span class="material-icons-outlined">dashboard</span> Dashboard
-            </a>
-          </li>
-        </ul>
-      </aside>
-      <!-- End Sidebar -->
-
-      <!-- main dashboard section -->
-      <main class="main-container">
-        <!-- filter -->
-        <div>
+        <div id="sidebar-form">
           <form id="filterForm">
-            <div>
+            <div class="form-group">
+              <label for="date">Date:</label>
               <input type="date" id="date" name="date" />
             </div>
-            <div>
+            <div class="form-group">
+              <label for="storeLocation">Store Location:</label>
               <select id="storeLocation" name="storeLocation">
                 <option value="">All Locations</option>
                 <option value="Astoria">Astoria</option>
@@ -76,7 +61,8 @@
                 <option value="Hell's Kitchen">Hell's Kitchen</option>
               </select>
             </div>
-            <div>
+            <div class="form-group">
+              <label for="monthName">Month:</label>
               <select id="monthName" name="monthName">
                 <option value="">All Months</option>
                 <option value="Jan">January</option>
@@ -87,7 +73,8 @@
                 <option value="Jun">June</option>
               </select>
             </div>
-            <div>
+            <div class="form-group">
+              <label for="weekdayName">Weekday:</label>
               <select id="weekdayName" name="weekdayName">
                 <option value="">All Weekdays</option>
                 <option value="Min">Sunday</option>
@@ -99,7 +86,8 @@
                 <option value="Sab">Saturday</option>
               </select>
             </div>
-            <div>
+            <div class="form-group">
+              <label for="productType">Product Type:</label>
               <select id="productType" name="productType">
                 <option value="">Product Type</option>
                 <option value="Organic Beans">Organic Beans</option>
@@ -109,8 +97,6 @@
                 <option value="Premium Beans">Premium Beans</option>
                 <option value="Green beans">Green beans</option>
                 <option value="Herbal tea">Herbal tea</option>
-
-                <option value="Herbal tea">Herbal tea</option>
                 <option value="Green tea">Green tea</option>
                 <option value="Chai tea">Chai tea</option>
                 <option value="Drinking Chocolate">Drinking Chocolate</option>
@@ -119,7 +105,6 @@
                 <option value="Organic brewed coffee">
                   Organic brewed coffee
                 </option>
-
                 <option value="Gourmet brewed coffee">
                   Gourmet brewed coffee
                 </option>
@@ -131,32 +116,29 @@
                 <option value="Brewed Green tea">Brewed Green tea</option>
                 <option value="Brewed Black tea">Brewed Black tea</option>
                 <option value="Brewed Chai tea">Brewed Chai tea</option>
-
                 <option value="Hot chocolate">Hot chocolate</option>
                 <option value="Regular syrup">Regular syrup</option>
-                <option
-                  value="		
-                Sugar free syrup"
-                >
-                  Sugar free syrup
-                </option>
+                <option value="Sugar free syrup">Sugar free syrup</option>
                 <option value="Biscotti">Biscotti</option>
                 <option value="Scone">Scone</option>
                 <option value="Pastry">Pastry</option>
                 <option value="Clothing">Clothing</option>
-                <option
-                  value="	
-                Housewares"
-                >
-                  Housewares
-                </option>
+                <option value="Housewares">Housewares</option>
               </select>
             </div>
-            <button type="button" id="filterBtn">Apply Filters</button>
-            <button type="button" id="clearBtn">Clear Filters</button>
+            <div class="form-group">
+              <button type="button" id="filterBtn">Apply Filters</button>
+            </div>
+            <div class="form-group">
+              <button type="button" id="clearBtn">Clear Filters</button>
+            </div>
           </form>
         </div>
+      </aside>
+      <!-- End Sidebar -->
 
+      <!-- main dashboard section -->
+      <main class="main-container">
         <div class="main-cards">
           <div class="card">
             <div class="card-inner">
@@ -187,9 +169,7 @@
           <div class="card">
             <div class="card-inner">
               <h3>Total Store</h3>
-              <span class="material-icons-outlined"
-                >notification_important</span
-              >
+              <span class="material-symbols-outlined"> store </span>
             </div>
             <h1 id="totalStore"></h1>
           </div>
@@ -198,13 +178,14 @@
           <!-- Chart di atas -->
           <div class="top-charts">
             <div class="charts-card">
-              <h2 class="chart-title">Tabel Chart</h2>
+              <h2 class="chart-title">Produt Type Sales</h2>
               <div id="barchart">
-                <table id="transactionsTable">
+                <table id="transactionsTable" class="display">
                   <thead>
                     <tr>
                       <th>Product Type</th>
                       <th>Transaction Quantity</th>
+                      <th>Percetage %</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -215,9 +196,9 @@
             </div>
 
             <div class="charts-card">
-              <h2 class="chart-title">Line Chart</h2>
+              <h2 class="chart-title">Daily Sales</h2>
               <div id="line-chart">
-                <canvas id="timeChart" height="300"></canvas>
+                <canvas id="timeChart" height="330"></canvas>
               </div>
             </div>
           </div>
@@ -249,8 +230,8 @@
     </div>
 
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.35.5/apexcharts.min.js"></script> -->
-
-    <script type="module" src="../js/card.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="../js/dashboard.js"></script>
     <script src="../js/index.js"></script>
   </body>

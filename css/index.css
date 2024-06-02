@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #fff2d7;
+  background-color: #fff0dd;
   color: #000;
   font-family: "Verdana", sans-serif;
 }
@@ -15,8 +15,6 @@ body {
 
 .material-icons-outlined {
   vertical-align: middle;
-  line-height: 1px;
-  font-size: 35px;
 }
 
 .grid-container {
@@ -94,9 +92,17 @@ body {
 }
 
 .sidebar-responsive {
-  display: inline !important;
+  display: block !important;
   position: absolute;
   z-index: 12 !important;
+  opacity: 0.9 !important;
+  background-color: #263043;
+  grid-area: sidebar !important;
+  height: 100% !important;
+  width: 60% !important;
+  overflow-y: auto !important;
+  transition: width 2s !important; /* Increased transition duration to 2 seconds */
+  -webkit-transition: all 2s !important; /* Increased transition duration to 2 seconds for WebKit browsers */
 }
 
 /* ---------- MAIN ---------- */
@@ -125,35 +131,17 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding: 25px;
+  padding: 3px 20px;
   border-radius: 5px;
+  border-style: solid;
+  border-color: #7e5539;
+}
+.card-inner > h3,
+h1,
+span {
+  color: #7e5539;
 }
 
-.card:first-child {
-  background-color: #2962ff;
-}
-
-.card:nth-child(2) {
-  background-color: #ff6d00;
-}
-
-.card:nth-child(3) {
-  background-color: #2e7d32;
-}
-
-.card:nth-child(4) {
-  background-color: #d50000;
-}
-
-.card-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.card-inner > .material-icons-outlined {
-  font-size: 45px;
-}
 
 /* charts */
 .charts {
@@ -166,25 +154,30 @@ body {
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 20px;
 }
-
+/* warna untuk bagian time chart */
+#timeChart {
+  background-color: #fff;
+}
+#line-chart {
+  border-radius: 5px;
+  border-style: solid;
+  border-color: #000;
+}
 .bottom-charts {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
+  height: 40vh;
 }
-.charts-card-bawah {
-  background-color: #263043;
+/* .charts-card-bawah {
   border-radius: 8px;
-  width: 32.5%;
-}
-.charts-card {
-  background-color: #263043;
-  border-radius: 8px;
-}
+
+} */
 .chart-title {
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #000;
 }
 
 /* tabel chart style */
@@ -201,6 +194,12 @@ th,
 td {
   padding: 8px;
   text-align: left;
+  color: #000;
+}
+
+/* modifikasi warna TH */
+th {
+  background-color: #9e614f;
 }
 tbody {
   display: block;
@@ -229,10 +228,11 @@ tbody tr {
   flex-wrap: wrap;
   align-items: center;
   gap: 15px; /* Memberikan jarak antar elemen */
-  background-color: #f9f9f9; /* Latar belakang form */
   padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Menambahkan bayangan */
+}
+#filterForm label {
+  color: #fff;
+  padding-bottom: 5px;
 }
 
 /* Mengatur input dan select agar memiliki ukuran tetap dan desain yang menarik */
@@ -242,13 +242,21 @@ tbody tr {
   align-items: flex-start;
 }
 
-#filterForm div select,
-#filterForm div input {
+#filterForm div select {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
   width: 200px;
+  transition: border-color 0.3s;
+}
+
+#filterForm div input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 180px;
   transition: border-color 0.3s;
 }
 
@@ -258,63 +266,82 @@ tbody tr {
 }
 
 #filterForm button {
-  padding: 10px 20px;
+  padding: 10px 10px;
   border: none;
   border-radius: 4px;
-  background-color: #4caf50;
-  color: white;
-  font-size: 14px;
   cursor: pointer;
+  position: relative;
+  background-color: #fff;
+  color: #000;
+  text-decoration: none;
+  overflow: hidden;
+  z-index: 1;
+  font-size: 14px;
+
+  width: 200px;
   transition: background-color 0.3s;
 }
 
-#filterForm button:hover {
-  background-color: #45a049;
+button::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #dbba8f;
+  transform: translateX(-100%);
+  transition: all 0.3s;
+  z-index: -1;
 }
 
-#filterForm button:active {
-  background-color: #3e8e41;
+button:hover::before {
+  transform: translateX(0);
 }
 
+/* mengatur jarak dengan bagian filter */
+#filterBtn {
+  margin-top: 20px;
+}
 /* Mengatur button agar tidak terlalu besar */
 #filterBtn,
 #clearBtn {
   flex: 0 1 auto;
 }
 
-@media (max-width: 768px) {
-  /* Mengatur ulang tata letak untuk layar kecil agar menjadi vertikal */
-  #filterForm {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  #filterForm div select,
-  #filterForm div input,
-  #filterForm button {
-    width: 100%; /* Mengatur elemen agar mengambil lebar penuh pada layar kecil */
-  }
-}
-
 /* ---------- MEDIA QUERIES ---------- */
-/* tampilan laptop */
-@media screen and (min-width: 1024px) and (max-width: 1920px) {
+
+/* tampilan untuk tampilan lebih besar dari laptop */
+@media screen and (min-width: 1067px) {
   /* Atur gaya CSS untuk laptop di sini */
   .charts-card-bawah {
-    background-color: #263043;
-    border-radius: 8px;
-    width: 31.9%;
+    width: 32%;
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #000;
+  }
+}
+/* tampilan laptop standar max 15 inch*/
+@media screen and (min-width: 1024px) and (max-width: 1366px) {
+  /* Atur gaya CSS untuk laptop di sini */
+  .charts-card-bawah {
+    width: 31.4%;
   }
 }
 
 /* Small <= 768px  atau mode mobile*/
-@media screen and (max-width: 1023px) {
+@media screen and (max-width: 768px) {
   .grid-container {
     grid-template-columns: 1fr;
     grid-template-rows: 0.2fr 3fr;
     grid-template-areas:
       "header"
       "main";
+  }
+  .charts-card-bawah {
+    border-radius: 5px;
+    border-style: solid;
+    border-color: #000;
   }
 
   /* untuk mengatur sidebar tidak ditampilkan di mode mobile */
@@ -358,5 +385,18 @@ tbody tr {
   .charts-card-bawah {
     width: 100%;
     height: 100%; /* Tinggi akan menyesuaikan dengan konten */
+  }
+  /* Mengatur ulang tata letak untuk layar kecil agar menjadi vertikal */
+  #filterForm {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #filterForm div select,
+  #filterForm button {
+    width: 100%; /* Mengatur elemen agar mengambil lebar penuh pada layar kecil */
+  }
+  #filterForm div input {
+    width: 93%;
   }
 }

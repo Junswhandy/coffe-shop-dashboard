@@ -1,4 +1,4 @@
-// variabel global
+// Variabel global
 let dataJson = [];
 let monthChart = null;
 let myChart = null;
@@ -9,6 +9,16 @@ let totalStoresCard = null;
 let totalTransactionsCard = null;
 let totalTransactionQuantityCard = null;
 
+const optionsChart = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    y: {
+      beginAtZero: true,
+    },
+  },
+};
+
 // Fungsi filter data
 function filterData() {
   const dateInput = document.getElementById("date").value;
@@ -17,7 +27,6 @@ function filterData() {
   const weekdayNameInput = document.getElementById("weekdayName").value;
   const productTypeInput = document.getElementById("productType").value;
 
-  // Mengecek apakah semua filter kosong
   if (
     !dateInput &&
     !storeLocationInput &&
@@ -26,7 +35,7 @@ function filterData() {
     !productTypeInput
   ) {
     alert("Please select at least one filter before applying.");
-    return; // Menghentikan eksekusi fungsi jika tidak ada filter yang dipilih
+    return;
   }
 
   let filteredData = dataJson;
@@ -69,7 +78,7 @@ function filterData() {
     );
   }
 
-  console.log("Filtered data:", filteredData); // Log data yang telah difilter
+  console.log("Filtered data:", filteredData);
 
   tampilStore(filteredData);
   tampilBulan(filteredData);
@@ -100,17 +109,7 @@ function clearFilters() {
 document.getElementById("filterBtn").addEventListener("click", filterData);
 document.getElementById("clearBtn").addEventListener("click", clearFilters);
 
-const optionsChart = {
-  responsive: true, // Membuat grafik responsif
-  maintainAspectRatio: false, // Mengabaikan rasio aspek
-  scales: {
-    y: {
-      beginAtZero: true,
-    },
-  },
-};
-
-// fungsi load data
+// Fungsi load data
 async function fetchData() {
   const url = "../data/data.json";
   try {
@@ -129,31 +128,41 @@ async function fetchData() {
   }
 }
 
-// fungsi tampil store
+// Fungsi tampil penjualan berdsarkan store
 function tampilStore(data) {
   if (myChart == null) {
     const config = {
       type: "bar",
       data: {
-        labels: [], // Akan diisi dengan lokasi toko
+        labels: [],
         datasets: [
           {
             label: "Sales by Store",
-            data: [], // Akan diisi dengan jumlah penjualan
-            backgroundColor: "rgba(255, 255, 255, 1)", // Putih
-            borderColor: "rgba(0, 0, 0, 1)", // Hitam
+            data: [],
+            backgroundColor: "#dbba8f",
+            borderColor: "rgba(0, 0, 0, 1)",
             borderWidth: 2,
           },
         ],
       },
-      options: optionsChart,
+      options: {
+        ...optionsChart,
+        onClick: (_e, activeEls) => {
+          if (activeEls.length > 0) {
+            const dataIndex = activeEls[0].index;
+            const label = myChart.data.labels[dataIndex];
+            const filteredData = dataJson.filter(
+              (item) => item.store_location === label
+            );
+            updateCharts(filteredData);
+          }
+        },
+      },
     };
 
-    // Render init block
     myChart = new Chart(document.getElementById("myChart"), config);
   }
 
-  // bar chart store
   let salesByStore = {};
   data.forEach((item) => {
     const storeLocation = item.store_location;
@@ -166,41 +175,46 @@ function tampilStore(data) {
     }
   });
 
-  // Memperbarui label dan data pada grafik
   myChart.config.data.labels = Object.keys(salesByStore);
   myChart.config.data.datasets[0].data = Object.values(salesByStore);
   myChart.update();
 }
+
+// fungsi chart tampil penjualan berdasarkan bulan
 function tampilBulan(data) {
   if (monthChart == null) {
     const config = {
       type: "bar",
       data: {
-        labels: [], // Akan diisi dengan nama bulan
+        labels: [],
         datasets: [
           {
             label: "Sales by Month",
-            data: [], // Akan diisi dengan jumlah penjualan
-            backgroundColor: "rgba(255, 255, 255, 1)", // Putih
-            borderColor: "rgba(0, 0, 0, 1)", // Hitam
+            data: [],
+            backgroundColor: "#dbba8f",
+            borderColor: "rgba(0, 0, 0, 1)",
             borderWidth: 2,
           },
         ],
       },
       options: {
-        responsive: true, // Membuat grafik responsif
-        maintainAspectRatio: false, // Mengabaikan rasio aspek
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
+        ...optionsChart,
+        onClick: (e, activeEls) => {
+          if (activeEls.length > 0) {
+            const dataIndex = activeEls[0].index;
+            const label = monthChart.data.labels[dataIndex];
+            const filteredData = dataJson.filter(
+              (item) => item.month_name === label
+            );
+            updateCharts(filteredData);
+          }
         },
       },
     };
-    // Render init block
+
     monthChart = new Chart(document.getElementById("monthChart"), config);
   }
-  // bar chart
+
   let salesByMonth = {};
   data.forEach((item) => {
     const monthName = item.month_name;
@@ -215,137 +229,121 @@ function tampilBulan(data) {
 
   console.log("Sales by month:", salesByMonth);
 
-  // Memperbarui label dan data pada grafik
-  monthChart.config.data.labels = Object.keys(salesByMonth); // Memperbarui labels
-  monthChart.config.data.datasets[0].data = Object.values(salesByMonth); // Memperbarui data
+  monthChart.config.data.labels = Object.keys(salesByMonth);
+  monthChart.config.data.datasets[0].data = Object.values(salesByMonth);
   monthChart.update();
 }
+
+// fungsi chart tampil data penjualan berdasarkan hari
 function tampilDay(data) {
   if (weekdayChart == null) {
     const config = {
       type: "bar",
       data: {
-        labels: [], // Akan diisi dengan nama hari
+        labels: [],
         datasets: [
           {
             label: "Sales by Weekday",
-            data: [], // Akan diisi dengan jumlah penjualan
-            backgroundColor: "rgba(255, 255, 255, 1)", // Putih
-            borderColor: "rgba(0, 0, 0, 1)", // Hitam
+            data: [],
+            backgroundColor: "#dbba8f",
+            borderColor: "rgba(0, 0, 0, 1)",
             borderWidth: 2,
           },
         ],
       },
       options: {
-        responsive: true, // Membuat grafik responsif
-        maintainAspectRatio: false, // Mengabaikan rasio aspek
-        scales: {
-          y: {
-            beginAtZero: true,
-          },
+        ...optionsChart,
+        onClick: (e, activeEls) => {
+          if (activeEls.length > 0) {
+            const dataIndex = activeEls[0].index;
+            const label = weekdayChart.data.labels[dataIndex];
+            const filteredData = dataJson.filter(
+              (item) => item.weekday_name === label
+            );
+            updateCharts(filteredData);
+          }
         },
       },
     };
 
-    // Render init block
     weekdayChart = new Chart(document.getElementById("weekdayChart"), config);
   }
-  // bar chart
+
   let salesByWeekday = {};
   data.forEach((item) => {
-    const weekday = item.weekday; // Misalnya, field weekday menyimpan angka (0 untuk Minggu, 1 untuk Senin, dst.)
+    const weekdayName = item.weekday_name;
     const transactionQty = parseInt(item.transaction_qty);
 
-    if (salesByWeekday[weekday]) {
-      salesByWeekday[weekday] += transactionQty;
+    if (salesByWeekday[weekdayName]) {
+      salesByWeekday[weekdayName] += transactionQty;
     } else {
-      salesByWeekday[weekday] = transactionQty;
+      salesByWeekday[weekdayName] = transactionQty;
     }
   });
 
-  // Mengonversi objek menjadi array dan mengurutkannya berdasarkan field weekday
-  const sortedSalesByWeekday = Object.entries(salesByWeekday).sort(
-    (a, b) => a[0] - b[0]
-  );
+  const sortedSalesByWeekday = Object.entries(salesByWeekday).sort((a, b) => {
+    const daysOfWeek = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    return daysOfWeek.indexOf(a[0]) - daysOfWeek.indexOf(b[0]);
+  });
 
-  console.log("Sorted Sales by weekday:", sortedSalesByWeekday);
-
-  // Mengonversi angka hari kembali menjadi nama hari
-  const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
-
-  // Memperbarui label dan data pada grafik
   weekdayChart.config.data.labels = sortedSalesByWeekday.map(
-    (entry) => daysOfWeek[entry[0]]
-  ); // Memperbarui labels
+    (entry) => entry[0]
+  );
   weekdayChart.config.data.datasets[0].data = sortedSalesByWeekday.map(
     (entry) => entry[1]
-  ); // Memperbarui data
-
+  );
   weekdayChart.update();
 }
+
+// fungsi time chart untuk menampilkan daily sales
 function tampilTimeChart(data) {
   if (timeChart == null) {
     const config = {
-      type: "line", // Mengubah jenis chart menjadi line
+      type: "line",
       data: {
-        labels: [], // Akan diisi dengan tanggal
+        labels: [],
         datasets: [
           {
-            label: "Daily Sales", // Ubah label dataset
-            data: [], // Akan diisi dengan jumlah penjualan harian
-            backgroundColor: "rgba(255, 255, 255, 1)", // Putih
-            borderColor: "rgba(255, 255, 255, 1)", // Hitam
-            borderWidth: 0.5,
+            label: "Daily Sales",
+            data: [],
+            backgroundColor: "rgba(255, 255, 255, 0)",
+            borderColor: "#936e59",
+            borderWidth: 1,
             pointRadius: 0.5,
           },
         ],
       },
       options: {
-        responsive: true, // Membuat grafik responsif
-        maintainAspectRatio: false, // Mengabaikan rasio aspek
-        layout: {
-          padding: {
-            top: 0, // Atur jarak atas (top) dari grafik
-            bottom: 0, // Atur jarak bawah (bottom) dari grafik
-            left: 0, // Atur jarak kiri (left) dari grafik
-            right: 0, // Atur jarak kanan (right) dari grafik
-          },
-          height: 400, // Atur tinggi grafik
-        },
-        scales: {
-          y: {
-            stacked: true,
-            beginAtZero: true,
-            ticks: {
-              // Atur tinggi sumbu Y
-              min: 0, // Nilai minimum
-              max: 100, // Nilai maksimum
-              stepSize: 50, // Ukuran langkah
-            },
-          },
+        ...optionsChart,
+        onClick: (e, activeEls) => {
+          if (activeEls.length > 0) {
+            const dataIndex = activeEls[0].index;
+            const label = timeChart.data.labels[dataIndex];
+            const filteredData = dataJson.filter(
+              (item) => item.transaction_date === label
+            );
+            updateCharts(filteredData);
+          }
         },
       },
     };
-    // Render init block
+
     timeChart = new Chart(document.getElementById("timeChart"), config);
   }
-  let dailySales = {};
 
-  // Memproses data untuk mendapatkan jumlah penjualan harian
+  let dailySales = {};
   data.forEach((item) => {
-    const date = item.transaction_date; // Anggap ada properti date dalam data
+    const date = item.transaction_date;
     const transactionQty = parseInt(item.transaction_qty);
 
-    // Mengecek apakah tanggal sudah ada dalam objek
     if (dailySales[date]) {
       dailySales[date] += transactionQty;
     } else {
@@ -355,22 +353,19 @@ function tampilTimeChart(data) {
 
   console.log("Daily Sales:", dailySales);
 
-  // Mengubah format objek ke dalam array untuk labels dan data
-  const labels = Object.keys(dailySales);
-  const dataa = Object.values(dailySales);
-
-  // Memperbarui label dan data pada grafik
-  timeChart.config.data.labels = labels; // Memperbarui labels
-  timeChart.config.data.datasets[0].data = dataa; // Memperbarui data
+  timeChart.config.data.labels = Object.keys(dailySales);
+  timeChart.config.data.datasets[0].data = Object.values(dailySales);
   timeChart.update();
 }
-// Fungsi untuk memproses data dan mengisi tabel
-// Fungsi untuk memproses data dan mengisi tabel
+
+// fungsi untuk menampilkan penjualan berdasarkan product type di tabel
 function productTypeTable(data) {
   const tableBody = document.querySelector("#transactionsTable tbody");
   const aggregatedData = {};
 
-  // Menghitung total transaction_qty per product_type
+  // Mengumpulkan data dan menghitung total transaction_qty
+  let totalTransactionQty = 0;
+
   data.forEach((item) => {
     const productType = item.product_type;
     const transactionQty = parseInt(item.transaction_qty);
@@ -380,21 +375,23 @@ function productTypeTable(data) {
     } else {
       aggregatedData[productType] = transactionQty;
     }
+
+    totalTransactionQty += transactionQty;
   });
 
-  // Convert aggregatedData to an array
+  // Mengonversi objek aggregatedData menjadi array
   const aggregatedArray = Object.entries(aggregatedData).map(
     ([product_type, transaction_qty]) => ({ product_type, transaction_qty })
   );
 
-  // Mengurutkan array berdasarkan transaction_qty dari yang terbesar ke yang terkecil
+  // Mengurutkan array berdasarkan transaction_qty
   aggregatedArray.sort((a, b) => b.transaction_qty - a.transaction_qty);
 
-  // Clear existing rows
+  // Membersihkan isi tabel
   tableBody.innerHTML = "";
 
-  // Menambahkan baris ke tabel (menampilkan hanya 7 data pertama)
-  aggregatedArray.slice(0, 7).forEach((item) => {
+  // Menambahkan data ke tabel dengan kolom persentase
+  aggregatedArray.forEach((item) => {
     const row = document.createElement("tr");
 
     const productTypeCell = document.createElement("td");
@@ -405,28 +402,19 @@ function productTypeTable(data) {
     transactionQtyCell.textContent = item.transaction_qty;
     row.appendChild(transactionQtyCell);
 
+    const percentageCell = document.createElement("td");
+    const percentage = (
+      (item.transaction_qty / totalTransactionQty) *
+      100
+    ).toFixed(2);
+    percentageCell.textContent = `${percentage}%`;
+    row.appendChild(percentageCell);
+
     tableBody.appendChild(row);
   });
-
-  // Menambahkan baris sisa data ke tabel untuk scrolling
-  if (aggregatedArray.length > 7) {
-    aggregatedArray.slice(7).forEach((item) => {
-      const row = document.createElement("tr");
-
-      const productTypeCell = document.createElement("td");
-      productTypeCell.textContent = item.product_type;
-      row.appendChild(productTypeCell);
-
-      const transactionQtyCell = document.createElement("td");
-      transactionQtyCell.textContent = item.transaction_qty;
-      row.appendChild(transactionQtyCell);
-
-      tableBody.appendChild(row);
-    });
-  }
 }
 
-// card section
+// fungsi untuk card menampilkan total revenue
 function updateTotalRevenue(data) {
   totalRevenueCard = document.getElementById("totalRevenue");
 
@@ -434,12 +422,13 @@ function updateTotalRevenue(data) {
   data.forEach((item) => {
     totalRevenue += parseFloat(item.revenue);
   });
-  totalRevenue = totalRevenue.toFixed(2); // Mengambil dua angka di belakang koma
+  totalRevenue = totalRevenue.toFixed(2);
 
-  totalRevenueCard.innerText = "$" + totalRevenue; // Menampilkan total pendapatan di dalam card
+  totalRevenueCard.innerText = "$" + totalRevenue;
   console.log("Total revenue:", totalRevenue);
 }
 
+// fungsi card untuk menampilkan total store
 function updateTotalStores(data) {
   totalStoresCard = document.getElementById("totalStore");
 
@@ -449,19 +438,21 @@ function updateTotalStores(data) {
   });
   const totalStores = stores.size;
 
-  totalStoresCard.innerText = totalStores; // Menampilkan jumlah store di dalam card
+  totalStoresCard.innerText = totalStores;
   console.log("Total stores:", totalStores);
 }
 
+// fungsi store untuk menampilkan total transaction
 function updateTotalTransactions(data) {
   totalTransactionsCard = document.getElementById("totalTransactions");
 
   const totalTransactions = data.length;
 
-  totalTransactionsCard.innerText = totalTransactions; // Menampilkan jumlah transaksi di dalam card
+  totalTransactionsCard.innerText = totalTransactions;
   console.log("Total transactions:", totalTransactions);
 }
 
+// fungsi card untuk menampilkan jumlah penjualan
 function updateTotalTransactionQuantity(data) {
   totalTransactionQuantityCard = document.getElementById(
     "totalTransactionQuantity"
@@ -472,11 +463,24 @@ function updateTotalTransactionQuantity(data) {
     totalTransactionQuantity += parseInt(item.transaction_qty);
   });
 
-  totalTransactionQuantityCard.innerText = totalTransactionQuantity; // Menampilkan jumlah total transaction_qty di dalam card
+  totalTransactionQuantityCard.innerText = totalTransactionQuantity;
   console.log("Total transaction quantity:", totalTransactionQuantity);
 }
 
-// fungsi memanggil dan menampilkan data
+// fungsi filtered data berdasarkan chart yang di klik
+function updateCharts(filteredData) {
+  tampilStore(filteredData);
+  tampilBulan(filteredData);
+  tampilDay(filteredData);
+  tampilTimeChart(filteredData);
+  updateTotalRevenue(filteredData);
+  updateTotalStores(filteredData);
+  updateTotalTransactions(filteredData);
+  updateTotalTransactionQuantity(filteredData);
+  productTypeTable(filteredData);
+}
+
+// untuk menampilkan data
 document.addEventListener("DOMContentLoaded", async function () {
   await fetchData();
   console.log(dataJson);
