@@ -93,16 +93,21 @@ body {
 
 .sidebar-responsive {
   display: block !important;
-  position: absolute;
+  position: fixed; /* Menggunakan fixed untuk memastikan sidebar tetap di tempat saat di-scroll */
   z-index: 12 !important;
   opacity: 0.9 !important;
   background-color: #263043;
   grid-area: sidebar !important;
-  height: 100% !important;
+  height: 100vh !important; /* Menggunakan 100vh untuk memastikan sidebar mengambil seluruh tinggi viewport */
   width: 60% !important;
-  overflow-y: auto !important;
-  transition: width 2s !important; /* Increased transition duration to 2 seconds */
-  -webkit-transition: all 2s !important; /* Increased transition duration to 2 seconds for WebKit browsers */
+  overflow-y: auto !important; /* Memungkinkan konten di dalam sidebar untuk di-scroll */
+  transition: width 2s !important; /* Durasi transisi ditingkatkan menjadi 2 detik */
+  -webkit-transition: all 2s !important; /* Durasi transisi ditingkatkan menjadi 2 detik untuk browser WebKit */
+}
+
+/* Menambahkan gaya untuk konten di dalam sidebar agar tidak menimpa konten lain */
+.sidebar-content {
+  padding: 10px;
 }
 
 /* ---------- MAIN ---------- */
