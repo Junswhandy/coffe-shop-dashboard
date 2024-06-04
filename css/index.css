@@ -212,14 +212,11 @@ tbody tr {
   table-layout: fixed;
 }
 /* mengatur ketinggian chart */
-#bar-chart,
-#area-chart,
 #bar-chart2,
-#area-chart2,
-#area-chart3 {
+#bar-chart3,
+#bar-chart4 {
   height: 300px;
 }
-
 /* filter style  */
 /* Mengatur form agar elemen-elemennya tersusun secara horizontal */
 #filterForm {
@@ -333,7 +330,6 @@ button:hover::before {
   .grid-container {
     grid-template-columns: 1fr;
     grid-template-rows: 0.2fr 3fr;
-    height: auto;
     grid-template-areas:
       "header"
       "main";
@@ -343,7 +339,11 @@ button:hover::before {
     border-style: solid;
     border-color: #000;
   }
-
+  #bar-chart2,
+  #bar-chart3,
+  #bar-chart4 {
+    height: 250px;
+  }
   /* untuk mengatur sidebar tidak ditampilkan di mode mobile */
   #sidebar {
     display: none;
