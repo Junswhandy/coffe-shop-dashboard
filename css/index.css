@@ -342,7 +342,7 @@ button:hover::before {
   #bar-chart2,
   #bar-chart3,
   #bar-chart4 {
-    height: 250px;
+    height: 240px;
   }
   /* untuk mengatur sidebar tidak ditampilkan di mode mobile */
   #sidebar {
