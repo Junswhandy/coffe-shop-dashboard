@@ -1,3 +1,43 @@
+/* Gaya untuk loader */
+#loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(243, 243, 243, 0.9); /* Transparansi */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+.logo {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.spinner {
+  width: 80px;
+  height: 80px;
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -24,7 +64,7 @@ body {
   grid-template-areas:
     "sidebar header header header"
     "sidebar main main main";
-  height: 100%;
+  height: 100vh;
 }
 
 /* ---------- HEADER ---------- */
@@ -93,21 +133,16 @@ body {
 
 .sidebar-responsive {
   display: block !important;
-  position: fixed; /* Menggunakan fixed untuk memastikan sidebar tetap di tempat saat di-scroll */
+  position: absolute;
   z-index: 12 !important;
   opacity: 0.9 !important;
   background-color: #263043;
   grid-area: sidebar !important;
-  height: 100vh !important; /* Menggunakan 100vh untuk memastikan sidebar mengambil seluruh tinggi viewport */
+  height: 100% !important;
   width: 60% !important;
-  overflow-y: auto !important; /* Memungkinkan konten di dalam sidebar untuk di-scroll */
-  transition: width 2s !important; /* Durasi transisi ditingkatkan menjadi 2 detik */
-  -webkit-transition: all 2s !important; /* Durasi transisi ditingkatkan menjadi 2 detik untuk browser WebKit */
-}
-
-/* Menambahkan gaya untuk konten di dalam sidebar agar tidak menimpa konten lain */
-.sidebar-content {
-  padding: 10px;
+  overflow-y: auto !important;
+  transition: width 2s !important; /* Increased transition duration to 2 seconds */
+  -webkit-transition: all 2s !important; /* Increased transition duration to 2 seconds for WebKit browsers */
 }
 
 /* ---------- MAIN ---------- */
@@ -165,7 +200,7 @@ span {
 #line-chart {
   border-radius: 5px;
   border-style: solid;
-  border-color: #000;
+  border-color: #7e5539;
 }
 .bottom-charts {
   display: flex;
@@ -222,6 +257,7 @@ tbody tr {
 #bar-chart4 {
   height: 300px;
 }
+
 /* filter style  */
 /* Mengatur form agar elemen-elemennya tersusun secara horizontal */
 #filterForm {
@@ -290,6 +326,7 @@ button::before {
   top: 0;
   width: 100%;
   height: 100%;
+
   background-color: #dbba8f;
   transform: translateX(-100%);
   transition: all 0.3s;
@@ -319,14 +356,19 @@ button:hover::before {
     width: 32%;
     border-radius: 5px;
     border-style: solid;
-    border-color: #000;
+    border-color: #7e5539;
   }
 }
+
 /* tampilan laptop standar max 15 inch*/
 @media screen and (min-width: 1024px) and (max-width: 1366px) {
   /* Atur gaya CSS untuk laptop di sini */
   .charts-card-bawah {
     width: 31.4%;
+    border-color: #7e5539;
+  }
+  #timeChart {
+    height: 350px;
   }
 }
 
@@ -342,7 +384,7 @@ button:hover::before {
   .charts-card-bawah {
     border-radius: 5px;
     border-style: solid;
-    border-color: #000;
+    border-color: #7e5539;
   }
   #bar-chart2,
   #bar-chart3,

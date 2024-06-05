@@ -25,3 +25,13 @@ function closeSidebar() {
     sidebarOpen = false;
   }
 }
+
+function showContent() {
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("content").style.display = "grid";
+}
+
+// Panggil fungsi showContent setelah 3 detik
+window.onload = function () {
+  setTimeout(showContent, 1000);
+};
